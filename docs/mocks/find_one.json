@@ -1,0 +1,51 @@
+{
+  "name": "Devweekerson",
+  "accounts": [
+    {
+      "number": "01.097954-4",
+      "agency": "2030",
+      "primary": true,
+      "balance": 10000.00,
+      "limit": 5000.00
+    },
+    {
+      "number": "01.0290432-7",
+      "agency": "2050",
+      "primary": false,
+      "balance": 20000.00,
+      "limit": 10000.00
+    }
+  ],
+  "features": [
+    {
+      "type": "PIX",
+      "icon": "pix"
+    },
+    {
+      "type": "PAGAR",
+      "icon": "qr_code"
+    },
+    {
+      "type": "INVESTIR",
+      "icon": "savings"
+    },
+    {
+      "type": "RECARREGAR",
+      "icon": "phone_android"
+    },
+    {
+      "type": "CARTOES",
+      "icon": "credit_card"
+    }
+  ],
+  "cards": [
+    {
+      "number": "xxxx xxxx xxxx 1111",
+      "type": "CREDIT"
+    },
+    {
+      "number": "xxxx xxxx xxxx 2222",
+      "type": "DEBIT"
+    }
+  ]
+}
