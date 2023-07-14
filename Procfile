@@ -1,1 +1,1 @@
-web: java -jar build/libs/spring-boot-3-rest-api-template-0.0.1-SNAPSHOT.jar
+web: java -jar build/libs/santander-dev-week-2023-api-0.0.1-SNAPSHOT.jar
