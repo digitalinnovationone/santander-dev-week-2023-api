@@ -32,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public User create(User userToCreate) {
+        if (userRepository.existsByAccountNumber(userToCreate.getAccount().getNumber())) {
+            throw new BusinessException("This account number already exists.");
+        }
         return this.userRepository.save(userToCreate);
     }
 
