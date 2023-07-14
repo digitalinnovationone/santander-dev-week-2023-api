@@ -1,5 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${RAILWAY_DB_HOST}:${RAILWAY_DB_PORT}/${RAILWAY_DB_NAME}
-    username: ${RAILWAY_DB_USERNAME}
-    password: ${RAILWAY_DB_PASSWORD}
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
