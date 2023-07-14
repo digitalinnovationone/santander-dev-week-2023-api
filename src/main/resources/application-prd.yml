@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${RAILWAY_DB_HOST}:${RAILWAY_DB_PORT}/${RAILWAY_DB_NAME}
+    username: ${RAILWAY_DB_USERNAME}
+    password: ${RAILWAY_DB_PASSWORD}
