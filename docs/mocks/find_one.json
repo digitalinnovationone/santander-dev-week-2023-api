@@ -1,51 +1,44 @@
 {
-  "name": "Devweekerson",
-  "accounts": [
-    {
-      "number": "01.097954-4",
-      "agency": "2030",
-      "primary": true,
-      "balance": 10000.00,
-      "limit": 5000.00
-    },
-    {
-      "number": "01.0290432-7",
-      "agency": "2050",
-      "primary": false,
-      "balance": 20000.00,
-      "limit": 10000.00
-    }
-  ],
+  "id": 1,
+  "name": "Devweekerson James DIO",
+  "account": {
+    "number": "01.097954-4",
+    "agency": "2030",
+    "balance": 10000.00,
+    "limit": 5000.00
+  },
   "features": [
     {
-      "type": "PIX",
-      "icon": "pix"
+      "icon": "https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/pix.svg",
+      "description": "PIX"
     },
     {
-      "type": "PAGAR",
-      "icon": "qr_code"
+      "icon": "https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/pay.svg",
+      "description": "Pagar"
     },
     {
-      "type": "INVESTIR",
-      "icon": "savings"
-    },
-    {
-      "type": "RECARREGAR",
-      "icon": "phone_android"
-    },
-    {
-      "type": "CARTOES",
-      "icon": "credit_card"
+      "icon": "https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/transfer.svg",
+      "description": "Transferir"
     }
   ],
   "cards": [
     {
       "number": "xxxx xxxx xxxx 1111",
-      "type": "CREDIT"
+      "limit": 1000.00
     },
     {
       "number": "xxxx xxxx xxxx 2222",
-      "type": "DEBIT"
+      "limit": 2000.00
+    }
+  ],
+  "news": [
+    {
+      "icon": "https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/credit.svg",
+      "description": "O Santander tem soluções de crédito sob medida pra você. Confira!"
+    },
+    {
+      "icon": "https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/insurance.svg",
+      "description": "Santander Seguro Casa, seu faz-tudo. Mais de 50 serviços pra você. Confira!"
     }
   ]
 }
