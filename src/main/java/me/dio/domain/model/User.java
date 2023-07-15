@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
-@Entity(name = "tb_users")
+@Entity(name = "tb_user")
 public class User {
     
     @Id
@@ -22,12 +22,12 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    private Card card;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Feature> features;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Card> cards;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<News> news;
@@ -56,20 +56,20 @@ public class User {
         this.account = account;
     }
 
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
     public List<Feature> getFeatures() {
         return features;
     }
 
     public void setFeatures(List<Feature> features) {
         this.features = features;
-    }
-
-    public List<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
     }
 
     public List<News> getNews() {

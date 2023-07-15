@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService {
 
         dbUser.setName(userToUpdate.getName());
         dbUser.setAccount(userToUpdate.getAccount());
+        dbUser.setCard(userToUpdate.getCard());
         dbUser.setFeatures(userToUpdate.getFeatures());
-        dbUser.setCards(userToUpdate.getCards());
         dbUser.setNews(userToUpdate.getNews());
 
         return this.userRepository.save(dbUser);
