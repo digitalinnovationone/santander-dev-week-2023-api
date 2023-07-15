@@ -1,11 +1,15 @@
 {
   "id": 1,
-  "name": "Devweekerson James DIO",
+  "name": "Devweekerson",
   "account": {
     "number": "01.097954-4",
     "agency": "2030",
-    "balance": 10000.00,
-    "limit": 5000.00
+    "balance": 624.12,
+    "limit": 1000
+  },
+  "card": {
+    "number": "xxxx xxxx xxxx 1111",
+    "limit": 2000
   },
   "features": [
     {
@@ -19,16 +23,6 @@
     {
       "icon": "https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/transfer.svg",
       "description": "Transferir"
-    }
-  ],
-  "cards": [
-    {
-      "number": "xxxx xxxx xxxx 1111",
-      "limit": 1000.00
-    },
-    {
-      "number": "xxxx xxxx xxxx 2222",
-      "limit": 2000.00
     }
   ],
   "news": [
