@@ -2,14 +2,15 @@ package me.dio.controller.dto;
 
 import me.dio.domain.model.Feature;
 
-public record FeatureDto(String icon, String description) {
+public record FeatureDto(Long id, String icon, String description) {
 
-    public static FeatureDto fromModel(Feature model) {
-        return new FeatureDto(model.getIcon(), model.getDescription());
+    public FeatureDto(Feature model) {
+        this(model.getId(), model.getIcon(), model.getDescription());
     }
 
     public Feature toModel() {
         Feature model = new Feature();
+        model.setId(this.id);
         model.setIcon(this.icon);
         model.setDescription(this.description);
         return model;
