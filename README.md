@@ -1,66 +1,62 @@
 # Santander Dev Week 2023 Java API
 
-RESTful API da Santander Dev Week 2023 construída em Java 17 com Spring Boot 3.
+Desafio: "Explorando IA Generativa em um Pipeline de ETL com Python" parte do Santander Bootcamp 2023 - Ciência de Dados com Python
 
-## Principais Tecnologias
- - **Java 17**: Utilizaremos a versão LTS mais recente do Java para tirar vantagem das últimas inovações que essa linguagem robusta e amplamente utilizada oferece;
- - **Spring Boot 3**: Trabalharemos com a mais nova versão do Spring Boot, que maximiza a produtividade do desenvolvedor por meio de sua poderosa premissa de autoconfiguração;
- - **Spring Data JPA**: Exploraremos como essa ferramenta pode simplificar nossa camada de acesso aos dados, facilitando a integração com bancos de dados SQL;
- - **OpenAPI (Swagger)**: Vamos criar uma documentação de API eficaz e fácil de entender usando a OpenAPI (Swagger), perfeitamente alinhada com a alta produtividade que o Spring Boot oferece;
- - **Railway**: facilita o deploy e monitoramento de nossas soluções na nuvem, além de oferecer diversos bancos de dados como serviço e pipelines de CI/CD.
+## Etapas Realizadas
+Arquivo CSV criado usando googgle collab:
 
-## [Link do Figma](https://www.figma.com/file/0ZsjwjsYlYd3timxqMWlbj/SANTANDER---Projeto-Web%2FMobile?type=design&node-id=1421%3A432&mode=design&t=6dPQuerScEQH0zAn-1)
+%%writefile banco.csv
+age,job,marital,education,default,balance,housing,loan
+34,unemployed,single,primary,no,1587,no,yes
+34,services,married,secondary,no,3789,yes,yes
+31,management,single,tertiary,no,1850,yes,no
+32,management,married,tertiary,no,1476,yes,no
+39,blue-collar,married,secondary,no,0,yes,no
+35,management,single,tertiary,no,747,no,no
+36,self-employed,married,tertiary,no,307,yes,no
+38,technician,single,secondary,no,147,no,no
+42,entrepreneur,married,tertiary,no,221,yes,no
+45,services,married,primary,no,-88,,yes
 
-O Figma foi utilizado para a abstração do domínio desta API, sendo útil na análise e projeto da solução.
 
-## Diagrama de Classes (Domínio da API)
+#### Extração
+Extrair as informações de idades do arquivo anterior:
 
-```mermaid
-classDiagram
-  class User {
-    -String name
-    -Account account
-    -Feature[] features
-    -Card card
-    -News[] news
-  }
+import pandas as pd
+df = pd.read_csv('banco.csv', na_values='na')
+df.head(n=10)
 
-  class Account {
-    -String number
-    -String agency
-    -Number balance
-    -Number limit
-  }
+Analisando as informações
 
-  class Feature {
-    -String icon
-    -String description
-  }
+df.dtypes
+df.select_dtypes('object').describe().transpose()
 
-  class Card {
-    -String number
-    -Number limit
-  }
+#### Transform
 
-  class News {
-    -String icon
-    -String description
-  }
+Verificar se alguma coluna tem info faltante:
+df.isna().any()
 
-  User "1" *-- "1" Account
-  User "1" *-- "N" Feature
-  User "1" *-- "1" Card
-  User "1" *-- "N" News
-```
+Remover a linha com informação incompleta:
+df.dropna(inplace=True)
 
-## Documentação da API (Swagger)
+Revisar informações após ajuste:
+df.head(n=10)
 
-### [https://sdw-2023-prd.up.railway.app/swagger-ui.html](https://sdw-2023-prd.up.railway.app/swagger-ui.html)
+#### Load
 
-Esta API ficará disponível no Railway por um período de tempo limitado, mas este é um código-fonte aberto. Portanto, sintam-se à vontade para cloná-lo, modificá-lo (já que é um bom projeto base para novos projetos) e executar localmente ou onde achar mais interessante! Só não esquece de marcar a gente quando divulgar a sua solução 🥰
+Extrair as informações de idades do arquivo aque foi ajustado e salvar como novo arquivo:
 
-### IMPORTANTE
+idades = []
+with open(file='idades.csv', mode='w', encoding='utf8') as fp:
+  linha = 'idade' + '\n'
+  fp.write(linha)
+  for idade in idades:
+    linha = str(idade) + '\n'
+    fp.write(linha)
 
-Aos interessados no desenvolvimento da tela inicial do App do Santander (Figma) em Angular, Android, iOS ou Flutter... Caso a URL produtiva não esteja mais disponível, deixamos um Backup no GitHub Pages, é só dar um GET lá 😘
-- URL de Produção: https://sdw-2023-prd.up.railway.app/users/1
-- Mock (Backup): https://digitalinnovationone.github.io/santander-dev-week-2023-api/mocks/find_one.json
+  
+
+    
+
+
+
