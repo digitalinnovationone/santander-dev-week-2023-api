@@ -1,0 +1,211 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/lucascabralds/santander-dev-week-2023-api/blob/main/Colab%20Dev%20Week\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Wf5KrEb6vrkR"
+      },
+      "source": [
+        "# **Santader Dev Week ⚡**\n",
+        "\n",
+        "\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "AadHv489SG5a"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 🚀 Pipeline ETL com IA Generativa (Google Gemini)\n",
+        "\n",
+        "**Projeto:** Automação de Marketing Bancário com Python e IA.\n",
+        "\n",
+        "Este projet implementa um fluxo **ETL (Extract, Transform, Load)** completo. O objetivo é extrair dados de clientes, utilizar a IA do Google (Gemini) para gerar mensagens de investimento personalizadas e salvar os resultados.\n",
+        "\n",
+        "### 📋 Etapas do Processo:\n",
+        "1.  **Extract (Extração):** Leitura de uma planilha CSV (`SDW2023.csv`) contendo IDs e Nomes de usuários.\n",
+        "2.  **Transform (Transformação):** Utilização do modelo `gemini-2.5-flash` para criar frases de marketing personalizadas para cada usuário.\n",
+        "3.  **Load (Carregamento):** Salvamento dos dados enriquecidos em um arquivo JSON (`sdw2023_etl_saida_gemini.json`).\n",
+        "\n",
+        "### 🛠 Pré-requisitos:\n",
+        "* **Arquivo de Entrada:** É necessário fazer o upload de um arquivo chamado `SDW2023.csv` na aba de arquivos do Colab.\n",
+        "* **API Key:** É necessário configurar a chave `GOOGLE_API_KEY` nos \"Segredos\" (ícone da chavinha 🔑 na barra lateral esquerda do Colab) e habilitar o acesso ao notebook."
+      ],
+      "metadata": {
+        "id": "mFwfbnpERD-N"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### 📂 Estrutura do Arquivo `SDW2023.csv`\n",
+        "Para que o código funcione, o arquivo CSV deve ter o seguinte formato (com cabeçalho):\n",
+        "\n",
+        "| UserID | nome |\n",
+        "| :--- | :--- |\n",
+        "| 1 | Naruto |\n",
+        "| 2 | Hinata |\n",
+        "| 3 | Sasuze |"
+      ],
+      "metadata": {
+        "id": "yBQwjKIiRapp"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "import json\n",
+        "import google.generativeai as genai\n",
+        "from google.colab import userdata\n",
+        "\n",
+        "# ==============================================================================\n",
+        "# CONFIGURAÇÃO INICIAL (GEMINI)\n",
+        "# ==============================================================================\n",
+        "# Pega a chave dos \"Segredos\" do Colab\n",
+        "GOOGLE_API_KEY = userdata.get('GOOGLE_API_KEY')\n",
+        "genai.configure(api_key=GOOGLE_API_KEY)\n",
+        "\n",
+        "# Configuração do Modelo\n",
+        "# Corrigi a sintaxe aqui para incluir a instrução de sistema corretamente\n",
+        "model = genai.GenerativeModel(\n",
+        "    'gemini-2.5-flash',\n",
+        "    system_instruction=\"Você é um especialista em marketing bancário.\"\n",
+        ")\n",
+        "\n",
+        "# ==============================================================================\n",
+        "# 1. EXTRAÇÃO (Extract)\n",
+        "# Lendo do arquivo CSV\n",
+        "# ==============================================================================\n",
+        "print(\"--- Iniciando Extração ---\")\n",
+        "\n",
+        "try:\n",
+        "    # Certifique-se de que o arquivo SDW2023.csv está na pasta do Colab\n",
+        "    df = pd.read_csv('SDW2023.csv')\n",
+        "    usuarios = []\n",
+        "\n",
+        "    for index, linha in df.iterrows():\n",
+        "        usuarios.append({\n",
+        "            'id': linha['UserID'],\n",
+        "            'nome': linha['nome'],\n",
+        "            'noticias': []\n",
+        "        })\n",
+        "\n",
+        "    print(f\"{len(usuarios)} usuários extraídos com sucesso.\")\n",
+        "\n",
+        "except FileNotFoundError:\n",
+        "    print(\"ERRO: O arquivo 'SDW2023.csv' não foi encontrado. Criando usuário de teste.\")\n",
+        "    usuarios = [{'id': 0, 'nome': 'Teste', 'noticias': []}]\n",
+        "\n",
+        "# ==============================================================================\n",
+        "# 2. TRANSFORMAÇÃO (Transform) - COM GEMINI\n",
+        "# ==============================================================================\n",
+        "print(\"\\n--- Iniciando Transformação (com Gemini) ---\")\n",
+        "\n",
+        "def gerar_noticia_ia(usuario):\n",
+        "    try:\n",
+        "        # Prompt enviado para o modelo\n",
+        "        prompt = f\"Crie uma mensagem para {usuario['nome']} sobre a importância dos investimentos (máximo de 100 caracteres)\"\n",
+        "\n",
+        "        # Chamada ao Gemini usando a variavel 'model' configurada acima\n",
+        "        resposta = model.generate_content(prompt)\n",
+        "\n",
+        "        # O Gemini retorna o texto em .text\n",
+        "        return resposta.text.strip()\n",
+        "\n",
+        "    except Exception as erro:\n",
+        "        # Caso ocorra algum erro (API Key inválida, cota excedida, etc)\n",
+        "        return f\"Erro ao gerar mensagem: {str(erro)}\"\n",
+        "\n",
+        "# Loop para processar cada usuário\n",
+        "for usuario in usuarios:\n",
+        "    conteudo_noticia = gerar_noticia_ia(usuario)\n",
+        "    print(f\"Gerando notícia para {usuario['nome']}: {conteudo_noticia}\")\n",
+        "\n",
+        "    usuario['noticias'].append({\n",
+        "        \"icone\": \"https://digitalinnovationone.github.io/santander-dev-week-2023-api/icons/credit.svg\",\n",
+        "        \"descricao\": conteudo_noticia\n",
+        "    })\n",
+        "\n",
+        "# ==============================================================================\n",
+        "# 3. CARREGAMENTO (Load)\n",
+        "# ==============================================================================\n",
+        "print(\"\\n--- Iniciando Carregamento ---\")\n",
+        "\n",
+        "arquivo_saida = 'sdw2023_etl_saida_gemini.json'\n",
+        "\n",
+        "with open(arquivo_saida, 'w', encoding='utf-8') as arquivo:\n",
+        "    json.dump(usuarios, arquivo, indent=2, ensure_ascii=False)\n",
+        "\n",
+        "print(f\"Dados transformados salvos com sucesso em '{arquivo_saida}'!\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 191
+        },
+        "id": "uiuTjya_Ri6O",
+        "outputId": "59e44b26-0bcf-4739-cd12-3d325b361aa8"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- Iniciando Extração ---\n",
+            "3 usuários extraídos com sucesso.\n",
+            "\n",
+            "--- Iniciando Transformação (com Gemini) ---\n",
+            "Gerando notícia para Naruto: Naruto, invista! É o jeito ninja de proteger Konoha, sua família e garantir um futuro poderoso. Acredite!\n",
+            "Gerando notícia para Hinata: Hinata, invista no seu futuro! Faça seu dinheiro crescer e realize seus sonhos. Comece já!\n",
+            "Gerando notícia para Sasuke: Uchiha. Sua força não é só chakra. Invista estrategicamente para um futuro imune a fraquezas. Garanta seu legado.\n",
+            "\n",
+            "--- Iniciando Carregamento ---\n",
+            "Dados transformados salvos com sucesso em 'sdw2023_etl_saida_gemini.json'!\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "### 📥 Download do Resultado\n",
+        "Após a execução, atualize a barra lateral de arquivos (ícone da pasta 📁). O arquivo `/content/sdw2023_etl_saida_gemini.json` estará disponível para download."
+      ],
+      "metadata": {
+        "id": "hbdKOujKRuzF"
+      }
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
