@@ -1,8 +1,8 @@
 package me.dio.controller.dto;
 
-import me.dio.domain.model.Account;
-
 import java.math.BigDecimal;
+
+import main.java.me.dio.domain.model.Account;
 
 public record AccountDto(Long id, String number, String agency, BigDecimal balance, BigDecimal limit) {
 

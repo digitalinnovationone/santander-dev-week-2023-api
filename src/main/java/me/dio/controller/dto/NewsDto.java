@@ -1,6 +1,6 @@
 package me.dio.controller.dto;
 
-import me.dio.domain.model.News;
+import main.java.me.dio.domain.model.News;
 
 public record NewsDto(Long id, String icon, String description) {
 

@@ -1,14 +1,14 @@
 package me.dio.controller.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import me.dio.service.exception.BusinessException;
-import me.dio.service.exception.NotFoundException;
+import com.sun.org.slf4j.internal.LoggerFactory;
+
+import main.java.me.dio.service.exception.BusinessException;
+import main.java.me.dio.service.exception.NotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
