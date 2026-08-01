@@ -1,12 +1,12 @@
 package me.dio.controller.dto;
 
-import me.dio.domain.model.User;
-
-import java.util.List;
-
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import main.java.me.dio.domain.model.User;
 
 public record UserDto(
         Long id,

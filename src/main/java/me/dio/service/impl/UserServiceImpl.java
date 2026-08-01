@@ -1,16 +1,17 @@
 package me.dio.service.impl;
 
-import me.dio.domain.model.User;
-import me.dio.domain.repository.UserRepository;
-import me.dio.service.UserService;
-import me.dio.service.exception.BusinessException;
-import me.dio.service.exception.NotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static java.util.Optional.ofNullable;
 
 import java.util.List;
 
-import static java.util.Optional.ofNullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import main.java.me.dio.domain.model.User;
+import main.java.me.dio.domain.repository.UserRepository;
+import main.java.me.dio.service.UserService;
+import main.java.me.dio.service.exception.BusinessException;
+import main.java.me.dio.service.exception.NotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {

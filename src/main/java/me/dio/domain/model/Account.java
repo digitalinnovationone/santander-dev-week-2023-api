@@ -1,30 +1,51 @@
 package me.dio.domain.model;
 
 import java.math.BigDecimal;
+import me.dio.domain.exception.BusinessException;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity(name = "tb_account")
 public class Account {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true)
     private String number;
-
     private String agency;
-
-    @Column(precision = 13, scale = 2)
     private BigDecimal balance;
+    private BigDecimal limit; // Limite adicional/cheque especial
+    private BigDecimal pixDailyLimit; // Limite diário de transação Pix
 
-    @Column(name = "additional_limit", precision = 13, scale = 2)
-    private BigDecimal limit;
+    public Account() {
+        this.balance = BigDecimal.ZERO;
+        this.limit = BigDecimal.ZERO;
+        this.pixDailyLimit = new BigDecimal("1000.00"); // Limite diário Pix padrão de R$ 1000,00
+    }
+
+    public Account(Long id, String number, String agency, BigDecimal balance, BigDecimal limit, BigDecimal pixDailyLimit) {
+        this.id = id;
+        this.number = number;
+        this.agency = agency;
+        this.balance = balance != null ? balance : BigDecimal.ZERO;
+        this.limit = limit != null ? limit : BigDecimal.ZERO;
+        this.pixDailyLimit = pixDailyLimit != null ? pixDailyLimit : new BigDecimal("1000.00");
+    }
+
+    // Regra de Negócio: Depósito
+    public void deposit(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessException("O valor do depósito deve ser maior que zero.");
+        }
+        this.balance = this.balance.add(amount);
+    }
+
+    // Regra de Negócio: Saque / Débito
+    public void withdraw(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessException("O valor do saque deve ser maior que zero.");
+        }
+        BigDecimal availableBalance = this.balance.add(this.limit);
+        if (amount.compareTo(availableBalance) > 0) {
+            throw new BusinessException("Saldo insuficiente. Saldo disponível (com limite): R$ " + availableBalance);
+        }
+        this.balance = this.balance.subtract(amount);
+    }
 
     public Long getId() {
         return id;
@@ -66,4 +87,11 @@ public class Account {
         this.limit = limit;
     }
 
+    public BigDecimal getPixDailyLimit() {
+        return pixDailyLimit;
+    }
+
+    public void setPixDailyLimit(BigDecimal pixDailyLimit) {
+        this.pixDailyLimit = pixDailyLimit;
+    }
 }
